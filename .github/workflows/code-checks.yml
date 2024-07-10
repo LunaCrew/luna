@@ -25,6 +25,9 @@ jobs:
         with:
           gradle-version: '8.8'
 
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
       - name: Run Detekt
         run: ./gradlew detekt
 
