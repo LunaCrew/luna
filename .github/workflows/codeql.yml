@@ -2,9 +2,9 @@ name: "CodeQL"
 
 on:
   push:
-    branches: ["main", "beta", "develop"]
+    branches: [ "main", "beta", "develop" ]
   pull_request:
-    branches: ["main", "beta", "develop"]
+    branches: [ "main", "beta", "develop" ]
   schedule:
     - cron: "28 5 * * 3"
 
@@ -21,22 +21,27 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ["kotlin", "java"]
+        include:
+          - language: java-kotlin
+            build-mode: manual
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v2
         with:
           languages: ${{ matrix.language }}
-
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
-
-      - name: Build
-        uses: ./gradlew build
+      - if: ${{ matrix.build-mode == 'manual' }}
+        name: Gradle build
+        run: |
+          echo 'building the project...'
+          echo './gradlew build'
+          exit 1
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
