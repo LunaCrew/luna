@@ -38,10 +38,7 @@ jobs:
           languages: ${{ matrix.language }}
       - if: ${{ matrix.build-mode == 'manual' }}
         name: Gradle build
-        run: |
-          echo 'building the project...'
-          echo './gradlew build'
-          exit 0
+        run: ./gradlew build
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
