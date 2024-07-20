@@ -1,5 +1,3 @@
-import kotlinx.kover.api.CoverageEngineVariant
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
