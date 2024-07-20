@@ -1,6 +1,11 @@
-#!/bin/bash
+#!/bin/sh
 
-echo "Running detekt check..."
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+echo -e "${BLUE}Running detekt check...${NC}"
 
 OUTPUT="/tmp/detekt-$(date +%s)"
 
@@ -11,11 +16,15 @@ EXIT_CODE=$?
 if [ $EXIT_CODE -ne 0 ]; then
     cat "$OUTPUT"
     rm "$OUTPUT"
-    echo "***********************************************"
-    echo "                 detekt failed                 "
-    echo " Please fix the above issues before committing "
-    echo "***********************************************"
+    echo -e "${RED}***********************************************"
+    echo -e "             detekt check failed               "
+    echo -e " Please fix the above issues before committing "
+    echo -e "***********************************************${NC}"
     exit $EXIT_CODE
+else
+    echo -e "${GREEN}***********************************************"
+    echo -e "             detekt check passed               "
+    echo -e "***********************************************${NC}"
 fi
 
 rm "$OUTPUT"
