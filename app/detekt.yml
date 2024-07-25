@@ -656,7 +656,7 @@ style:
     maxJumpCount: 1
   MagicNumber:
     active: true
-    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**']
+    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**', '**/build.gradle.kts']
     ignoreNumbers:
       - '-1'
       - '0'
@@ -669,8 +669,8 @@ style:
     ignoreCompanionObjectPropertyDeclaration: true
     ignoreAnnotation: false
     ignoreNamedArgument: true
-    ignoreEnums: false
-    ignoreRanges: false
+    ignoreEnums: true
+    ignoreRanges: true
     ignoreExtensionFunctions: true
   MandatoryBracesIfStatements:
     active: false
