@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.detekt)
     alias(libs.plugins.kover)
     alias(libs.plugins.google.services)
+    alias(libs.plugins.crashlytics)
+    alias(libs.plugins.firebase.perf)
 }
 
 android {
@@ -81,6 +83,8 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.perf)
     annotationProcessor(libs.room.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

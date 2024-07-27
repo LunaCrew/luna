@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.detekt) apply false
     alias(libs.plugins.kover) apply false
     alias(libs.plugins.google.services) apply false
+    alias(libs.plugins.crashlytics) apply false
+    alias(libs.plugins.firebase.perf) apply false
 }
 
 task("installGitHook", Copy::class) {
