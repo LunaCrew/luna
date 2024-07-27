@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.detekt)
     alias(libs.plugins.kover)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -78,6 +79,8 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.detekt)
     implementation(libs.room.runtime)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
     annotationProcessor(libs.room.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

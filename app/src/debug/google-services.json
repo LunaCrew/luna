@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "869467686531",
+    "project_id": "luna-ac852",
+    "storage_bucket": "luna-ac852.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:869467686531:android:b132c51205b6f4ca677db6",
+        "android_client_info": {
+          "package_name": "lunacrew.luna"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHJPgAwwznAk2lnvFdC6OPu6WuZfcLeN8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
