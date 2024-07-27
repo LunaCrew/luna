@@ -51,7 +51,7 @@ fun LunaTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
-        content = content
+        typography = typography,
+        content = content,
     )
 }
