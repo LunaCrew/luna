@@ -7,9 +7,47 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:869467686531:android:b132c51205b6f4ca677db6",
+        "mobilesdk_app_id": "1:869467686531:android:5ae5bbdaf1e6134c677db6",
         "android_client_info": {
-          "package_name": "lunacrew.luna"
+          "package_name": "lunateam.luna"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHJPgAwwznAk2lnvFdC6OPu6WuZfcLeN8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:869467686531:android:75472a9d7d7661ac677db6",
+        "android_client_info": {
+          "package_name": "lunateam.luna.full"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHJPgAwwznAk2lnvFdC6OPu6WuZfcLeN8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:869467686531:android:54f5d2b1312c731c677db6",
+        "android_client_info": {
+          "package_name": "lunateam.luna.pro"
         }
       },
       "oauth_client": [],

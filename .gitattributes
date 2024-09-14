@@ -1,0 +1,21 @@
+# Java sources
+*.java          text diff=java eol=lf
+*.kt            text diff=kotlin eol=lf
+*.groovy        text diff=java eol=lf
+*.gradle        text diff=java eol=lf
+*.gradle.kts    text diff=kotlin eol=lf
+
+*.properties    text eol=lf
+*.xml           text eol=lf
+mvnw            text eol=lf
+gradlew         text eol=lf
+
+# These files are binary and should be left untouched
+# (binary is a macro for -text -diff)
+*.class         binary
+*.dll           binary
+*.ear           binary
+*.jar           binary
+*.so            binary
+*.war           binary
+*.jks           binary

@@ -7,9 +7,47 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1072773246130:android:8e1b0721a1bd070f81adab",
+        "mobilesdk_app_id": "1:1072773246130:android:ea87f97fc0fff9e781adab",
         "android_client_info": {
-          "package_name": "lunacrew.luna"
+          "package_name": "lunateam.luna"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGcMcJESKgpR4itU7ZvKQwHggJ8tnovmU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1072773246130:android:5d786d6c2037fc3b81adab",
+        "android_client_info": {
+          "package_name": "lunateam.luna.full"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGcMcJESKgpR4itU7ZvKQwHggJ8tnovmU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1072773246130:android:a7a202450dce5f2b81adab",
+        "android_client_info": {
+          "package_name": "lunateam.luna.pro"
         }
       },
       "oauth_client": [],

@@ -1,4 +1,4 @@
-package lunacrew.luna.ui.theme
+package lunateam.luna.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

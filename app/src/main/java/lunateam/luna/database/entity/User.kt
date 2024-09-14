@@ -1,4 +1,4 @@
-package lunacrew.luna.database.entity
+package lunateam.luna.database.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
