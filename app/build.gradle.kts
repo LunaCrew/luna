@@ -45,17 +45,22 @@ android {
         }
     }
 
+    val versionDimension = "version"
+    flavorDimensions += versionDimension
     productFlavors {
         create("free") {
+            dimension = versionDimension
             isDefault = true
         }
 
         create("full") {
+            dimension = versionDimension
             applicationIdSuffix = ".full"
             versionNameSuffix = ".full"
         }
 
         create("pro") {
+            dimension = versionDimension
             applicationIdSuffix = ".pro"
             versionNameSuffix = ".pro"
         }
