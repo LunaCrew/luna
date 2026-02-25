@@ -23,11 +23,13 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.room.RoomDatabase
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
+import dagger.hilt.android.AndroidEntryPoint
 import lunacrew.luna.auth.Authentication
 import lunacrew.luna.auth.SignInForm
 import lunacrew.luna.database.Database
 import lunacrew.luna.ui.theme.LunaTheme
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     lateinit var db: RoomDatabase
     private val authRegister = registerForActivityResult(FirebaseAuthUIActivityResultContract()) {

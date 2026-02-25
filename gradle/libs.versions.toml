@@ -1,5 +1,5 @@
 [versions]
-agp = "8.13.2"
+agp = "9.0.0"
 kotlin = "2.3.10"
 coreKtx = "1.17.0"
 junit = "4.13.2"
@@ -10,6 +10,7 @@ activityCompose = "1.12.4"
 composeBom = "2026.02.00"
 firebaseBom = "34.9.0"
 room = "2.8.4"
+hilt = "2.59.2"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
@@ -36,16 +37,18 @@ firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-perf = { module = "com.google.firebase:firebase-perf" }
 firebase-config = { module = "com.google.firebase:firebase-config" }
 firebase-database = { module = "com.google.firebase:firebase-database" }
-firebase-auth = { module = "com.firebaseui:firebase-ui-auth", version = "9.1.1"}
+firebase-auth = { module = "com.firebaseui:firebase-ui-auth", version = "9.1.1" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+hilt = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.6" }
 firebase-perf = { id = "com.google.firebase.firebase-perf", version = "2.0.2" }
-google-services = { id = "com.google.gms.google-services", version = "4.4.4"}
+google-services = { id = "com.google.gms.google-services", version = "4.4.4" }
 ksp = { id = "com.google.devtools.ksp", version = "2.3.5" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }

@@ -28,6 +28,7 @@
 ## Specs
 
 + **Language:** Kotlin
++ **Android Studio:** [Otter 3 | 2025.2.3](https://androidstudio.googleblog.com/2026/01/android-studio-otter-3-feature-drop_0923772896.html) or newer
 + **Build System:** Gradle with Kotlin DSL
 + **Minimum SDK:** 29 (Android 10.0+)
 + **Target SDK:** 36
