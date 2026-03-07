@@ -4,18 +4,22 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import lunacrew.luna.database.dao.AltCommunicationDao
 import lunacrew.luna.database.dao.UserDao
 import lunacrew.luna.database.entities.UserEntity
+import lunacrew.luna.database.entities.AltCommunicationEntity
 
 @Database(
     entities = [
         UserEntity::class,
+        AltCommunicationEntity::class,
     ],
     version = 1,
     exportSchema = false,
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
+    abstract fun altCommunicationDao(): AltCommunicationDao
 }
 
 object Database {
