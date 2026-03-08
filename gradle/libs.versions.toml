@@ -8,9 +8,10 @@ espressoCore = "3.7.0"
 lifecycleRuntimeKtx = "2.10.0"
 activityCompose = "1.12.4"
 composeBom = "2026.02.00"
-firebaseBom = "34.9.0"
+supabase = "3.4.1"
 room = "2.8.4"
 hilt = "2.59.2"
+ktor = "3.4.1"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
@@ -31,13 +32,13 @@ androidx-compose-material3-adaptive-navigation-suite = { module = "androidx.comp
 androidx-compose-google-fonts = { module = "androidx.compose.ui:ui-text-google-fonts" }
 androidx-compose-material-icons = { module = "androidx.compose.material:material-icons-core" }
 androidx-compose-constraintlayout = { module = "androidx.constraintlayout:constraintlayout-compose", version = "1.1.1" }
-firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
-firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
-firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
-firebase-perf = { module = "com.google.firebase:firebase-perf" }
-firebase-config = { module = "com.google.firebase:firebase-config" }
-firebase-database = { module = "com.google.firebase:firebase-database" }
-firebase-auth = { module = "com.firebaseui:firebase-ui-auth", version = "9.1.1" }
+supabase-bom = { module = "io.github.jan-tennert.supabase:bom", version.ref = "supabase" }
+supabase-auth = { module = "io.github.jan-tennert.supabase:auth-kt" }
+supabase-realtime = { module = "io.github.jan-tennert.supabase:realtime-kt" }
+supabase-storage = { module = "io.github.jan-tennert.supabase:storage-kt" }
+ktor-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor"}
+ktor-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor"}
+slf4j = { module = "org.slf4j:slf4j-android", version = "1.7.36"}
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
@@ -47,8 +48,6 @@ hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.re
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.6" }
-firebase-perf = { id = "com.google.firebase.firebase-perf", version = "2.0.2" }
-google-services = { id = "com.google.gms.google-services", version = "4.4.4" }
 ksp = { id = "com.google.devtools.ksp", version = "2.3.5" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+sentry = { id = "io.sentry.android.gradle", version = "6.1.0" }

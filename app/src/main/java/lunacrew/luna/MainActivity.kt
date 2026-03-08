@@ -3,8 +3,6 @@ package lunacrew.luna
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
@@ -17,31 +15,23 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
-import androidx.compose.ui.unit.dp
-import androidx.room.RoomDatabase
-import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import dagger.hilt.android.AndroidEntryPoint
-import lunacrew.luna.auth.Authentication
-import lunacrew.luna.auth.SignInForm
-import lunacrew.luna.database.Database
+import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.auth.handleDeeplinks
 import lunacrew.luna.ui.theme.LunaTheme
+import javax.inject.Inject
+import javax.inject.Provider
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    lateinit var db: RoomDatabase
-    private val authRegister = registerForActivityResult(FirebaseAuthUIActivityResultContract()) {
-        Authentication.onSignInResult(it)
-    }
+    @Inject lateinit var supabaseClient: Provider<SupabaseClient>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supabaseClient.get().handleDeeplinks(intent)
 
-        db = Database.getInstance(applicationContext)
-
-        enableEdgeToEdge()
         setContent {
             LunaTheme {
                 LunaApp()
@@ -71,8 +61,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         )
-
-        SignInForm(Modifier.padding(top = 50.dp)) { Authentication(authRegister).launchSignIn() }
     }
 
     enum class AppDestinations(
