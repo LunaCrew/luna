@@ -19,6 +19,6 @@ interface AltCommunicationDao {
     @Delete
     suspend fun deleteText(altCommunication: AltCommunicationEntity)
 
-    @Query("SELECT * FROM alt_communication")
+    @Query("SELECT * FROM alt_communication ORDER BY indexOrder ASC")
     fun getAllTexts(): Flow<List<AltCommunicationEntity>>
 }

@@ -20,7 +20,9 @@ class AlternativeCommunicationViewModel @Inject constructor(
 ): ViewModel() {
     private val _boxTexts = MutableStateFlow(emptyList<AltCommunicationEntity>())
 
-    val boxTextState: StateFlow<List<AltCommunicationEntity>> = _boxTexts.asStateFlow()
+
+
+    val boxTextState: StateFlow<List<AltCommunicationEntity>> = _boxTexts
 
     init {
         getFavoriteBooks()
@@ -52,5 +54,12 @@ class AlternativeCommunicationViewModel @Inject constructor(
         }
     }
 
+    fun updateAllTextsOrder(entities: List<AltCommunicationEntity>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            entities.forEachIndexed { index, entity ->
+                db.altCommunicationDao().updateText(entity.copy(order = index))
+            }
+        }
+    }
 
 }

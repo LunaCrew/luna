@@ -14,7 +14,7 @@ import lunacrew.luna.database.entities.AltCommunicationEntity
         UserEntity::class,
         AltCommunicationEntity::class,
     ],
-    version = 1,
+    version = 2,
     exportSchema = false,
 )
 abstract class AppDatabase : RoomDatabase() {

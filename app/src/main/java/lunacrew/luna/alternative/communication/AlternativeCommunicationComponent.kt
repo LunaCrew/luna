@@ -36,6 +36,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -80,16 +81,20 @@ fun AlternativeCommunicationScreen(
     var closeFunction by remember { mutableStateOf(false) }
     var removeIcon by remember { mutableStateOf(false) }
 
-    var boxTexts =
-        alternativeCommunicationViewModel.boxTextState.collectAsState().value.toMutableList()
+    val boxTextsState by alternativeCommunicationViewModel.boxTextState.collectAsState()
+    val boxTexts = remember(boxTextsState) {
+        mutableStateListOf<AltCommunicationEntity>().apply { addAll(boxTextsState) }
+    }
+
 
     val lazyGridState = rememberLazyGridState()
     val reorderableLazyGridState = rememberReorderableLazyGridState(lazyGridState) { from, to ->
-        boxTexts = boxTexts.apply {
-            this[to.index] = this[from.index].also {
-                this[from.index] = this[to.index]
-            }
-        }
+//        boxTexts = boxTexts.apply {
+//            this[to.index] = this[from.index].also {
+//                this[from.index] = this[to.index]
+//            }
+//        }
+        boxTexts.add(to.index, boxTexts.removeAt(from.index))
 
         haptics.performHapticFeedback(HapticFeedbackType.SegmentFrequentTick)
     }
@@ -165,6 +170,7 @@ fun AlternativeCommunicationScreen(
                                         haptics.performHapticFeedback(HapticFeedbackType.GestureThresholdActivate)
                                     },
                                     onDragStopped = {
+                                        alternativeCommunicationViewModel.updateAllTextsOrder(boxTexts)
                                         haptics.performHapticFeedback(HapticFeedbackType.GestureEnd)
                                     },
                                 )
@@ -198,7 +204,7 @@ fun AlternativeCommunicationScreen(
                                 )
                             }
                         }
-                        if (isSelected) {
+                        if (isSelected && !reorder) {
                             SmallFloatingActionButton(
                                 onClick = {
                                     oldContent = item.text
@@ -311,18 +317,20 @@ fun AlternativeCommunicationScreen(
 
         if (showDialog) {
             AddEditDialog(
-                initialText = oldContent,
+                initialText = oldContent ?: "",
                 onDismiss = {
                     oldContent = ""
                     editComponent = false
                     showDialog = false
                 },
                 onConfirm = { content ->
-                    if (editComponent) {
+                    if (editComponent && selectedTextId != null) {
+                        val currentItem = boxTexts.find { it.textId == selectedTextId }
                         alternativeCommunicationViewModel.updateText(
                             AltCommunicationEntity(
-                                selectedTextId!!,
-                                content
+                                textId = selectedTextId!!,
+                                text = content,
+                                order = currentItem?.order ?: 0
                             )
                         )
                         selectedTextId = null
@@ -331,8 +339,9 @@ fun AlternativeCommunicationScreen(
                     } else {
                         alternativeCommunicationViewModel.insertText(
                             AltCommunicationEntity(
-                                0,
-                                content
+                                textId = 0,
+                                text = content,
+                                order = boxTexts.size
                             )
                         )
                     }

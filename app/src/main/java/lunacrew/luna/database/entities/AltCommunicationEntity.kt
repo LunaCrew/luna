@@ -8,4 +8,5 @@ import androidx.room.PrimaryKey
 data class AltCommunicationEntity (
     @PrimaryKey(autoGenerate = true) val textId: Int,
     @ColumnInfo(name = "text") val text: String?,
+    @ColumnInfo(name = "indexOrder") val order: Int
 )
