@@ -89,11 +89,6 @@ fun AlternativeCommunicationScreen(
 
     val lazyGridState = rememberLazyGridState()
     val reorderableLazyGridState = rememberReorderableLazyGridState(lazyGridState) { from, to ->
-//        boxTexts = boxTexts.apply {
-//            this[to.index] = this[from.index].also {
-//                this[from.index] = this[to.index]
-//            }
-//        }
         boxTexts.add(to.index, boxTexts.removeAt(from.index))
 
         haptics.performHapticFeedback(HapticFeedbackType.SegmentFrequentTick)
