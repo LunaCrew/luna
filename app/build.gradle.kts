@@ -26,9 +26,11 @@ android {
         val keyName = "SUPABASE_PUBLISHABLE_KEY"
         val urlName = "SUPABASE_URL"
         val supabaseConfig = getSupabaseConfig(urlName, keyName)
+        val sentryDsn = getSentryDsn()
 
         buildConfigField("String", keyName, "\"${supabaseConfig.first}\"")
         buildConfigField("String", urlName, "\"${supabaseConfig.second}\"")
+        buildConfigField("String", "SENTRY_DSN", "\"$sentryDsn\"")
     }
 
     buildTypes {
@@ -104,5 +106,18 @@ fun getSupabaseConfig(urlName: String, keyName: String): Pair<String, String> {
         val url = System.getenv(urlName) ?: ""
         val key = System.getenv(keyName) ?: ""
         return Pair(url, key)
+    }
+}
+
+fun getSentryDsn(): String {
+    val properties = Properties()
+
+    if (File("sentry.properties").exists()) {
+        properties.load(rootProject.file("sentry.properties").inputStream())
+        val dsn = properties.getProperty("dsn")
+        return dsn
+    } else {
+        val dsn = System.getenv("dsn") ?: ""
+        return dsn
     }
 }

@@ -15,6 +15,7 @@ class SentryConfig(context: Context) {
         SentryAndroid.init(context) { options ->
             options.isEnabled = isEnabled()
             options.isDebug = BuildConfig.DEBUG
+            options.dsn = BuildConfig.SENTRY_DSN
         }
     }
 

@@ -30,8 +30,7 @@
             </intent-filter>
         </activity>
     
-    <!-- Required: set your sentry.io project identifier (DSN) -->
-    <meta-data android:name="io.sentry.dsn" android:value="https://ea0de824e412ee7b956c2b697ae18681@o4511008907001856.ingest.de.sentry.io/4511008909951056" />
+    <meta-data android:name="io.sentry.auto-init" android:value="false" />
     <!-- Add data like request headers, user ip address and device name, see https://docs.sentry.io/platforms/android/data-management/data-collected/ for more info -->
     <meta-data android:name="io.sentry.send-default-pii" android:value="false" />
 
