@@ -1,4 +1,4 @@
-package lunacrew.luna
+package lunacrew.luna.core
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

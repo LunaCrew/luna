@@ -1,5 +1,6 @@
-package lunacrew.luna
+package lunacrew.luna.core
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -16,7 +17,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.handleDeeplinks
@@ -36,6 +41,8 @@ class MainActivity : ComponentActivity() {
             LunaTheme {
                 LunaApp()
             }
+
+            ShowSystemUi()
         }
     }
 
@@ -70,5 +77,14 @@ class MainActivity : ComponentActivity() {
         Menu("Menu", Icons.Default.Menu),
         Home("Home", Icons.Default.Home),
         Me("Me", Icons.Default.AccountCircle),
+    }
+
+    @Composable
+    private fun ShowSystemUi() {
+        val view = LocalView.current
+        val window = (view.context as Activity).window
+        val insetsController = WindowCompat.getInsetsController(window, view)
+        insetsController.show(WindowInsetsCompat.Type.systemBars())
+        insetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_DEFAULT
     }
 }

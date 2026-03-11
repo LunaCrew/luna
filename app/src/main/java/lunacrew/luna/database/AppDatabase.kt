@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
 import lunacrew.luna.database.dao.SettingsDao
 import lunacrew.luna.database.entities.SettingsEntity
 
@@ -26,7 +27,7 @@ object Database {
                 context.applicationContext,
                 AppDatabase::class.java,
                 "luna-app-database"
-            ).addMigrations()
+            ).addMigrations(*getDatabaseMigrations(context))
                 .fallbackToDestructiveMigration(true)
                 .build()
             INSTANCE = instance
@@ -34,3 +35,5 @@ object Database {
         }
     }
 }
+
+fun getDatabaseMigrations(context: Context): Array<Migration> = arrayOf()

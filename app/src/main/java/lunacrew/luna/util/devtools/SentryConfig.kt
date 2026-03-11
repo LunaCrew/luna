@@ -2,8 +2,8 @@ package lunacrew.luna.util.devtools
 
 import android.content.Context
 import io.sentry.android.core.SentryAndroid
-import lunacrew.luna.App
 import lunacrew.luna.BuildConfig
+import lunacrew.luna.core.App
 import lunacrew.luna.util.constants.TableSettings
 import javax.inject.Inject
 import javax.inject.Provider

@@ -1,4 +1,4 @@
-package lunacrew.luna.network.di
+package lunacrew.luna.di
 
 import dagger.Module
 import dagger.Provides

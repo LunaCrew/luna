@@ -1,4 +1,4 @@
-package lunacrew.luna.supabase.di
+package lunacrew.luna.di
 
 import dagger.Module
 import dagger.Provides
@@ -22,12 +22,12 @@ object SupabaseModule {
     @Provides
     @Singleton
     fun provideSupabaseAuth(client: SupabaseClient): Auth {
-        return supabaseClient.auth
+        return client.auth
     }
 
     @Provides
     @Singleton
     fun provideSupabaseStorage(client: SupabaseClient): Storage {
-        return supabaseClient.storage
+        return client.storage
     }
 }

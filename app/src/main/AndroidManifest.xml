@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
-        android:name=".App"
+        android:name=".core.App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Luna">
         <activity
-            android:name=".MainActivity"
+            android:name=".core.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Luna">
             <intent-filter>
@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
     
-    <meta-data android:name="io.sentry.auto-init" android:value="false" />
+    <meta-data android:name="io.sentry.dsn" android:value="" />
     <!-- Add data like request headers, user ip address and device name, see https://docs.sentry.io/platforms/android/data-management/data-collected/ for more info -->
     <meta-data android:name="io.sentry.send-default-pii" android:value="false" />
 

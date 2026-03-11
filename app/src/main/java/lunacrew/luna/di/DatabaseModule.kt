@@ -1,4 +1,4 @@
-package lunacrew.luna.database.di
+package lunacrew.luna.di
 
 import android.content.Context
 import dagger.Module
