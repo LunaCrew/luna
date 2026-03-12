@@ -11,6 +11,10 @@ composeBom = "2026.02.00"
 supabase = "3.4.1"
 room = "2.8.4"
 hilt = "2.59.2"
+navigationCompose = "2.9.7"
+reorderable = "3.0.0"
+foundation = "1.10.4"
+hiltCompose = "1.2.0"
 ktor = "3.4.1"
 
 [libraries]
@@ -44,6 +48,10 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 hilt = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
+androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
+hilt-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltCompose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

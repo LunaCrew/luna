@@ -5,17 +5,21 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
+import lunacrew.luna.database.dao.AltCommunicationDao
 import lunacrew.luna.database.dao.SettingsDao
+import lunacrew.luna.database.entities.AltCommunicationEntity
 import lunacrew.luna.database.entities.SettingsEntity
 
 @Database(
     entities = [
+        AltCommunicationEntity::class,
         SettingsEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false,
 )
 abstract class AppDatabase : RoomDatabase() {
+    abstract fun altCommunicationDao(): AltCommunicationDao
     abstract fun settingsDao(): SettingsDao
 }
 
@@ -27,7 +31,7 @@ object Database {
                 context.applicationContext,
                 AppDatabase::class.java,
                 "luna-app-database"
-            ).addMigrations(*getDatabaseMigrations(context))
+            ).addMigrations(*getDatabaseMigrations())
                 .fallbackToDestructiveMigration(true)
                 .build()
             INSTANCE = instance
@@ -36,4 +40,4 @@ object Database {
     }
 }
 
-fun getDatabaseMigrations(context: Context): Array<Migration> = arrayOf()
+fun getDatabaseMigrations(): Array<Migration> = arrayOf()
