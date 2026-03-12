@@ -1,5 +1,6 @@
-package lunacrew.luna
+package lunacrew.luna.core
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,39 +16,41 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.room.RoomDatabase
-import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import dagger.hilt.android.AndroidEntryPoint
+import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.auth.handleDeeplinks
 import lunacrew.luna.alternative.communication.AlternativeCommunicationScreen
-import lunacrew.luna.auth.Authentication
-import lunacrew.luna.database.Database
 import lunacrew.luna.ui.theme.LunaTheme
+import javax.inject.Inject
+import javax.inject.Provider
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    lateinit var db: RoomDatabase
-    private val authRegister = registerForActivityResult(FirebaseAuthUIActivityResultContract()) {
-        Authentication.onSignInResult(it)
-    }
+    @Inject lateinit var supabaseClient: Provider<SupabaseClient>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        db = Database.getInstance(applicationContext)
+        supabaseClient.get().handleDeeplinks(intent)
 
         WindowCompat.setDecorFitsSystemWindows(window, true)
+
         setContent {
             LunaTheme {
                 LunaApp()
             }
+
+//            ShowSystemUi()
         }
     }
 
@@ -103,5 +106,14 @@ class MainActivity : ComponentActivity() {
         Menu("Menu", Icons.Default.Menu),
         Home("Home", Icons.Default.Home),
         Me("Me", Icons.Default.AccountCircle),
+    }
+
+    @Composable
+    private fun ShowSystemUi() {
+        val view = LocalView.current
+        val window = (view.context as Activity).window
+        val insetsController = WindowCompat.getInsetsController(window, view)
+        insetsController.show(WindowInsetsCompat.Type.systemBars())
+        insetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_DEFAULT
     }
 }

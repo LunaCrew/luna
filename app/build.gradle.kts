@@ -1,11 +1,11 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.firebase.crashlytics)
-    alias(libs.plugins.firebase.perf)
-    alias(libs.plugins.google.services)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.sentry)
 }
 
 android {
@@ -22,6 +22,15 @@ android {
         versionName = "0.1-alpha-a"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val keyName = "SUPABASE_PUBLISHABLE_KEY"
+        val urlName = "SUPABASE_URL"
+        val supabaseConfig = getSupabaseConfig(urlName, keyName)
+        val sentryDsn = getSentryConfig("DSN")
+
+        buildConfigField("String", keyName, "\"${supabaseConfig.first}\"")
+        buildConfigField("String", urlName, "\"${supabaseConfig.second}\"")
+        buildConfigField("String", "SENTRY_DSN", "\"$sentryDsn\"")
     }
 
     buildTypes {
@@ -41,6 +50,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -57,16 +67,16 @@ dependencies {
     implementation(libs.androidx.compose.material.icons)
     implementation(libs.androidx.compose.google.fonts)
     implementation(libs.androidx.compose.constraintlayout)
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.crashlytics)
-    implementation(libs.firebase.analytics)
-    implementation(libs.firebase.perf)
-    implementation(libs.firebase.config)
-    implementation(libs.firebase.database)
-    implementation(libs.firebase.auth)
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     implementation(libs.hilt)
+    implementation(platform(libs.supabase.bom))
+    implementation(libs.supabase.auth)
+    implementation(libs.supabase.realtime)
+    implementation(libs.supabase.storage)
+    implementation(libs.ktor.okhttp)
+    implementation(libs.ktor.logging)
+    implementation(libs.slf4j)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.reorderable)
     implementation(libs.androidx.compose.foundation)
@@ -80,4 +90,37 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+}
+
+sentry {
+    org.set("luna-ks")
+    projectName.set("luna-android")
+    includeSourceContext.set(true)
+    authToken.set(getSentryConfig("AUTH_TOKEN"))
+}
+
+fun getSupabaseConfig(urlName: String, keyName: String): Pair<String, String> {
+    val properties = Properties()
+
+    if (File("supabase.properties").exists()) {
+        properties.load(rootProject.file("supabase.properties").inputStream())
+        val url = properties.getProperty(urlName)
+        val key = properties.getProperty(keyName)
+        return Pair(url, key)
+    } else {
+        val url = System.getenv(urlName) ?: ""
+        val key = System.getenv(keyName) ?: ""
+        return Pair(url, key)
+    }
+}
+
+fun getSentryConfig(param: String): String {
+    val properties = Properties()
+
+    if (File("sentry.properties").exists()) {
+        properties.load(rootProject.file("sentry.properties").inputStream())
+        return properties.getProperty(param)
+    } else {
+        return System.getenv(param) ?: ""
+    }
 }

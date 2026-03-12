@@ -14,5 +14,7 @@
 .externalNativeBuild
 .cxx
 local.properties
-/app/google-services.json
 
+# Sentry Config File
+sentry.properties
+supabase.properties
