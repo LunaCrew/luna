@@ -26,7 +26,7 @@ android {
         val keyName = "SUPABASE_PUBLISHABLE_KEY"
         val urlName = "SUPABASE_URL"
         val supabaseConfig = getSupabaseConfig(urlName, keyName)
-        val sentryDsn = getSentryDsn()
+        val sentryDsn = getSentryConfig("DSN")
 
         buildConfigField("String", keyName, "\"${supabaseConfig.first}\"")
         buildConfigField("String", urlName, "\"${supabaseConfig.second}\"")
@@ -92,6 +92,7 @@ sentry {
     org.set("luna-ks")
     projectName.set("luna-android")
     includeSourceContext.set(true)
+    authToken.set(getSentryConfig("AUTH_TOKEN"))
 }
 
 fun getSupabaseConfig(urlName: String, keyName: String): Pair<String, String> {
@@ -109,15 +110,13 @@ fun getSupabaseConfig(urlName: String, keyName: String): Pair<String, String> {
     }
 }
 
-fun getSentryDsn(): String {
+fun getSentryConfig(param: String): String {
     val properties = Properties()
 
     if (File("sentry.properties").exists()) {
         properties.load(rootProject.file("sentry.properties").inputStream())
-        val dsn = properties.getProperty("dsn")
-        return dsn
+        return properties.getProperty(param)
     } else {
-        val dsn = System.getenv("dsn") ?: ""
-        return dsn
+        return System.getenv(param) ?: ""
     }
 }
