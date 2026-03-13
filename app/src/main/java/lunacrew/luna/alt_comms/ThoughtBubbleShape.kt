@@ -1,5 +1,6 @@
-package lunacrew.luna.alternative.communication
+package lunacrew.luna.alt_comms
 
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.geometry.Size
@@ -24,7 +25,7 @@ class BubbleShape(private val arrowHeight: Float = 25f) : Shape {
             addRoundRect(
                 RoundRect(
                     rect = Rect(0f, 0f, width, rectHeight),
-                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(40f, 40f)
+                    cornerRadius = CornerRadius(40f, 40f)
                 )
             )
 

@@ -1,9 +1,8 @@
-package lunacrew.luna.alternative.communication
+package lunacrew.luna.alt_comms
 
 import android.content.res.Configuration
 import android.speech.tts.TextToSpeech
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,17 +19,17 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -43,66 +42,54 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import lunacrew.luna.R
-import lunacrew.luna.database.entities.AltCommunicationEntity
+import lunacrew.luna.database.entities.AltCommsEntity
+import lunacrew.luna.util.accessibility.textToSpeech
+import lunacrew.luna.util.composables.colorScheme
+import lunacrew.luna.util.composables.icons
+import lunacrew.luna.util.composables.typography
+import lunacrew.luna.util.extensions.getString
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyGridState
-import java.util.Locale
-
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AlternativeCommunicationScreen(
-    alternativeCommunicationViewModel: AlternativeCommunicationViewModel = hiltViewModel()
+    viewModel: AltCommsViewModel = hiltViewModel()
 ) {
+    var content by remember { mutableStateOf<AltCommsEntity?>(null) }
+    var isAltCommDialogVisible by remember { mutableStateOf(false) }
+    var isEditMode by remember { mutableStateOf(false) }
+    var isMenuExpanded by remember { mutableStateOf(false) }
+    var isReorderEnabled by remember { mutableStateOf(false) }
+    var isCloseBtnVisible by remember { mutableStateOf(false) }
+    var isDeleteBtnVisible by remember { mutableStateOf(false) }
+    var selectedCardId by rememberSaveable { mutableStateOf<Int?>(null) }
+
     val context = LocalContext.current
-    var showDialog by remember { mutableStateOf(false) }
-
-
-    var selectedTextId by rememberSaveable { mutableStateOf<Int?>(null) }
     val haptics = LocalHapticFeedback.current
-    var oldContent: String? by remember { mutableStateOf("") }
-    var editComponent by remember { mutableStateOf(false) }
-    var menuExpanded by remember { mutableStateOf(false) }
-    var reorder by remember { mutableStateOf(false) }
-    var closeFunction by remember { mutableStateOf(false) }
-    var removeIcon by remember { mutableStateOf(false) }
-
-    val boxTextsState by alternativeCommunicationViewModel.boxTextState.collectAsState()
-    val boxTexts = remember(boxTextsState) {
-        mutableStateListOf<AltCommunicationEntity>().apply { addAll(boxTextsState) }
+    val cardsState by viewModel.cardsList.collectAsState()
+    val cards = remember(cardsState) {
+        mutableStateListOf<AltCommsEntity>().apply { addAll(cardsState) }
     }
-
-
     val lazyGridState = rememberLazyGridState()
     val reorderableLazyGridState = rememberReorderableLazyGridState(lazyGridState) { from, to ->
-        boxTexts.add(to.index, boxTexts.removeAt(from.index))
-
+        cards.add(to.index, cards.removeAt(from.index))
         haptics.performHapticFeedback(HapticFeedbackType.SegmentFrequentTick)
     }
 
-    val tts = remember {
-        var ttsInstance: TextToSpeech? = null
-        ttsInstance = TextToSpeech(context) { status ->
-            if (status == TextToSpeech.SUCCESS) {
-                ttsInstance?.language = Locale.getDefault()
-            }
-        }
-        ttsInstance
-    }
+    val tts = remember { textToSpeech(context) }
 
     DisposableEffect(Unit) {
         onDispose {
@@ -130,14 +117,16 @@ fun AlternativeCommunicationScreen(
             contentPadding = PaddingValues(16.dp),
             state = lazyGridState
         ) {
-            items(boxTexts, key = { it.textId }) { item ->
-                ReorderableItem(reorderableLazyGridState, key = item.textId) {
-                    val isSelected = selectedTextId == item.textId
-                    Box(
+            items(cards, key = { it.id }) { item ->
+                ReorderableItem(reorderableLazyGridState, key = item.id) {
+                    val isSelected = selectedCardId == item.id
+                    Surface(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(itemSize.height)
-                            .zIndex(if (isSelected) 1f else 0f)
+                            .zIndex(if (isSelected) 1f else 0f),
+                        tonalElevation = 1.dp,
+                        shadowElevation = 1.dp
                     ) {
                         // Box da borda (zIndex menor)
                         Box(
@@ -145,44 +134,38 @@ fun AlternativeCommunicationScreen(
                                 .fillMaxSize()
                                 .padding(10.dp)
                                 .zIndex(0f)
-                                .border(
-                                    1.dp,
-                                    if (isSelected) MaterialTheme.colorScheme.primary else Color.LightGray
-                                )
                                 .combinedClickable(
                                     onClick = {
                                         tts.speak(item.text, TextToSpeech.QUEUE_FLUSH, null, null)
                                     },
                                     onLongClick = {
                                         haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                                        selectedTextId = item.textId
+                                        selectedCardId = item.id
 
                                     }
                                 )
                                 .draggableHandle(
-                                    enabled = reorder,
+                                    enabled = isReorderEnabled,
                                     onDragStarted = {
                                         haptics.performHapticFeedback(HapticFeedbackType.GestureThresholdActivate)
                                     },
                                     onDragStopped = {
-                                        alternativeCommunicationViewModel.updateAllTextsOrder(boxTexts)
+                                        viewModel.reorderCards(cards)
                                         haptics.performHapticFeedback(HapticFeedbackType.GestureEnd)
                                     },
                                 )
                         ) {
-                            item.text?.let { text ->
-                                Text(
-                                    text = text,
-                                    modifier = Modifier
-                                        .align(Alignment.Center)
-                                        .padding(8.dp)
-                                )
-                            }
+                            Text(
+                                text = item.text,
+                                modifier = Modifier
+                                    .align(Alignment.Center)
+                                    .padding(8.dp)
+                            )
                         }
-                        if (removeIcon) {
+                        if (isDeleteBtnVisible) {
                             SmallFloatingActionButton(
                                 onClick = {
-                                    alternativeCommunicationViewModel.deleteText(item)
+                                    viewModel.deleteCard(item)
                                 },
                                 modifier = Modifier
                                     .align(Alignment.TopEnd)
@@ -190,21 +173,21 @@ fun AlternativeCommunicationScreen(
                                     .zIndex(1f)
                                     .size(40.dp),
                                 shape = CircleShape,
-                                containerColor = Color.Red,
-                                contentColor = Color.White
+                                containerColor = colorScheme().error,
+                                contentColor = colorScheme().onError
                             ) {
                                 Icon(
-                                    imageVector = Icons.Default.Close,
-                                    contentDescription = "Remove Item"
+                                    imageVector = icons().Delete,
+                                    contentDescription = R.string.remove.getString()
                                 )
                             }
                         }
-                        if (isSelected && !reorder) {
+                        if (isSelected && !isReorderEnabled) {
                             SmallFloatingActionButton(
                                 onClick = {
-                                    oldContent = item.text
-                                    editComponent = true
-                                    showDialog = true
+                                    content = item
+                                    isEditMode = true
+                                    isAltCommDialogVisible = true
                                 },
                                 modifier = Modifier
                                     .align(Alignment.BottomEnd)
@@ -214,8 +197,8 @@ fun AlternativeCommunicationScreen(
                                 shape = CircleShape
                             ) {
                                 Icon(
-                                    imageVector = Icons.Default.Edit,
-                                    contentDescription = "Edit Text"
+                                    imageVector = icons().Edit,
+                                    contentDescription = R.string.edit.getString()
                                 )
                             }
                         }
@@ -224,7 +207,7 @@ fun AlternativeCommunicationScreen(
             }
         }
 
-        if (!closeFunction) {
+        if (!isCloseBtnVisible) {
             ConstraintLayout(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
@@ -232,7 +215,7 @@ fun AlternativeCommunicationScreen(
                 val (configButton, addButton) = createRefs()
                 FloatingActionButton(
                     onClick = {
-                        menuExpanded = !menuExpanded
+                        isMenuExpanded = !isMenuExpanded
                     },
                     modifier = Modifier
                         .padding(16.dp)
@@ -241,11 +224,11 @@ fun AlternativeCommunicationScreen(
                             bottom.linkTo(parent.bottom)
                         }
                 ) {
-                    Icon(imageVector = Icons.Default.Settings, contentDescription = "Setting Menu")
+                    Icon(imageVector = icons().Settings, contentDescription = R.string.alt_comms_settings.getString())
                 }
 
                 FloatingActionButton(
-                    onClick = { showDialog = true },
+                    onClick = { isAltCommDialogVisible = true },
                     modifier = Modifier
                         .padding(16.dp)
                         .constrainAs(addButton) {
@@ -253,94 +236,104 @@ fun AlternativeCommunicationScreen(
                             bottom.linkTo(parent.bottom)
                         }
                 ) {
-                    Icon(imageVector = Icons.Default.Add, contentDescription = "Add Text")
+                    Icon(
+                        imageVector = icons().Add,
+                        contentDescription = R.string.add.getString()
+                    )
                 }
             }
         } else {
             FloatingActionButton(
                 onClick = {
-                    closeFunction = false
-                    reorder = false
-                    removeIcon = false
+                    isCloseBtnVisible = false
+                    isReorderEnabled = false
+                    isDeleteBtnVisible = false
                 },
                 modifier = Modifier
                     .padding(16.dp)
                     .align(Alignment.BottomEnd)
             ) {
-                Icon(imageVector = Icons.Default.Close, contentDescription = "Close")
+                Icon(
+                    imageVector = icons().Check,
+                    contentDescription = R.string.confirm.getString()
+                )
             }
         }
 
 
         DropdownMenu(
-            expanded = menuExpanded,
-            containerColor = MaterialTheme.colorScheme.primaryContainer, // Muda a cor de fundo do menu
+            expanded = isMenuExpanded,
+            containerColor = colorScheme().primaryContainer,
             shape = BubbleShape(arrowHeight = 40f),
-            onDismissRequest = { menuExpanded = false },
+            onDismissRequest = { isMenuExpanded = false },
             offset = DpOffset((-75).dp, (-190).dp),
             modifier = Modifier.padding(end = 8.dp)
         ) {
             DropdownMenuItem(
                 text = {
                     Text(
-                        style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                        text = stringResource(R.string.remove)
+                        style = typography().titleSmall.copy(fontWeight = FontWeight.Bold),
+                        color = colorScheme().onPrimaryContainer,
+                        text = R.string.remove.getString()
                     )
                 },
                 onClick = {
-                    removeIcon = true
-                    menuExpanded = false
-                    closeFunction = true
+                    isDeleteBtnVisible = true
+                    isMenuExpanded = false
+                    isCloseBtnVisible = true
                 }
             )
             DropdownMenuItem(
                 text = {
                     Text(
-                        style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                        text = stringResource(R.string.reorder)
+                        style = typography().titleSmall.copy(fontWeight = FontWeight.Bold),
+                        color = colorScheme().onPrimaryContainer,
+                        text = R.string.reorder.getString()
                     )
                 },
                 onClick = {
-                    reorder = true
-                    menuExpanded = false
-                    closeFunction = true
+                    isReorderEnabled = true
+                    isMenuExpanded = false
+                    isCloseBtnVisible = true
                 }
             )
         }
 
-        if (showDialog) {
-            AddEditDialog(
-                initialText = oldContent ?: "",
+        if (isAltCommDialogVisible) {
+            AltCommsDialog (
+                initialText = content?.text,
+                initialEmoji = content?.emoji,
+                context = context,
                 onDismiss = {
-                    oldContent = ""
-                    editComponent = false
-                    showDialog = false
+                    content = null
+                    isEditMode = false
+                    isAltCommDialogVisible = false
                 },
-                onConfirm = { content ->
-                    if (editComponent && selectedTextId != null) {
-                        val currentItem = boxTexts.find { it.textId == selectedTextId }
-                        alternativeCommunicationViewModel.updateText(
-                            AltCommunicationEntity(
-                                textId = selectedTextId!!,
-                                text = content,
-                                order = currentItem?.order ?: 0
+                onConfirm = { card ->
+                    if (isEditMode && selectedCardId != null) {
+                        val currentItem = cards.find { it.id == selectedCardId }
+                        viewModel.updateCard(
+                            AltCommsEntity(
+                                id = selectedCardId!!,
+                                text = card.text,
+                                emoji = card.emoji,
+                                position = currentItem?.position ?: 0
                             )
                         )
-                        selectedTextId = null
-                        editComponent = false
-                        oldContent = ""
+                        selectedCardId = null
+                        isEditMode = false
+                        content = null
                     } else {
-                        alternativeCommunicationViewModel.insertText(
-                            AltCommunicationEntity(
-                                textId = 0,
-                                text = content,
-                                order = boxTexts.size
+                        viewModel.insertCard(
+                            AltCommsEntity(
+                                id = 0,
+                                text = content?.text ?: "",
+                                position = cards.size,
+                                emoji = content?.emoji ?: ""
                             )
                         )
                     }
-                    showDialog = false
+                    isAltCommDialogVisible = false
                 }
             )
         }

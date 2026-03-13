@@ -7,4 +7,12 @@
     <string name="line_limit">Limit of lines: 6</string>
     <string name="remove">Remove</string>
     <string name="reorder">Reorder</string>
+    <string name="create_message">Create message</string>
+    <string name="select_emoji">"Select an emoji\n"</string>
+    <string name="confirm">Confirm</string>
+    <string name="edit">Edit</string>
+    <string name="alt_comms_settings">Alternative communication settings</string>
+    <string name="menu">Menu</string>
+    <string name="home">Home</string>
+    <string name="profile">Profile</string>
 </resources>
