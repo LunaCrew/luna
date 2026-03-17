@@ -1,4 +1,4 @@
-package lunacrew.luna.core
+package lunacrew.luna.core.composable
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,12 +37,6 @@ fun MainScreen(
                 .align(Alignment.Center)
                 .verticalScroll(rememberScrollState())
         ) {
-            Button(
-                onClick = { navController.navigate(Screen.AltComms.route) }
-            ) {
-                Text("Alt-comms")
-            }
-
             Button(
                 onClick = { export = !export }
             ) {

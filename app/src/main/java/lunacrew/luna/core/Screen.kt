@@ -2,12 +2,13 @@ package lunacrew.luna.core
 
 sealed class Screen(val route: String) {
     object Main: Screen("main")
-    object Account: Screen("account")
+    object TopBar: Screen("topbar")
+    object NavDrawer: Screen("nav-drawer")
+
     object AltComms: Screen("alt-comms")
-    object Backup: Screen("backup")
-    object Login: Screen("login")
+    object Account: Screen("account")
     object Medical: Screen("medical")
     object Notepad: Screen("notepad")
     object Pomodoro: Screen("pomodoro")
-    object Menu: Screen("menu")
+    object Settings: Screen("settings")
 }
