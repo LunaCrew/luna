@@ -20,11 +20,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
@@ -55,7 +50,6 @@ import lunacrew.luna.database.entities.AltCommsEntity
 import lunacrew.luna.util.accessibility.textToSpeech
 import lunacrew.luna.util.composables.FloatingButton
 import lunacrew.luna.util.composables.colorScheme
-import lunacrew.luna.util.composables.icons
 import lunacrew.luna.util.extensions.getDrawable
 import lunacrew.luna.util.extensions.getString
 import sh.calvin.reorderable.ReorderableCollectionItemScope
@@ -148,7 +142,7 @@ fun AlternativeCommunicationScreen(
                                 shape = CircleShape
                             ) {
                                 Icon(
-                                    imageVector = icons().Edit,
+                                    painter = R.drawable.edit_filled.getDrawable(),
                                     contentDescription = R.string.edit.getString()
                                 )
                             }
@@ -176,7 +170,7 @@ fun AlternativeCommunicationScreen(
                                 isDeletion = true
                             },
                             label = { Text(R.string.delete.getString()) },
-                            leadingIcon = { Icon(icons().Delete, R.string.delete.getString()) },
+                            leadingIcon = { Icon(R.drawable.delete_filled.getDrawable(), R.string.delete.getString()) },
                             modifier = Modifier.padding(8.dp),
                         )
 
@@ -188,7 +182,7 @@ fun AlternativeCommunicationScreen(
                             label = { Text(R.string.reorder.getString()) },
                             leadingIcon = {
                                 Icon(
-                                    painter = R.drawable.ic_reorder.getDrawable(),
+                                    painter = R.drawable.reorder.getDrawable(),
                                     contentDescription = R.string.reorder.getString(),
                                     tint = colorScheme().onSurface
                                 )
@@ -200,7 +194,7 @@ fun AlternativeCommunicationScreen(
 
                 FloatingButton(
                     modifier = Modifier.padding(8.dp).align(Alignment.End),
-                    icon = icons().MoreVert,
+                    icon = R.drawable.more_vertical.getDrawable(),
                     description = R.string.menu.getString()
                 ) {
                     isMenuExpanded = !isMenuExpanded
@@ -208,7 +202,7 @@ fun AlternativeCommunicationScreen(
 
                 FloatingButton(
                     modifier = Modifier.padding(8.dp).align(Alignment.End),
-                    icon = icons().Add,
+                    icon = R.drawable.add_filled.getDrawable(),
                     description = R.string.add.getString()
                 ) {
                     isMenuExpanded = false
@@ -228,7 +222,7 @@ fun AlternativeCommunicationScreen(
                 Column {
                     FloatingButton(
                         modifier = Modifier.padding(8.dp),
-                        icon = icons().Delete,
+                        icon = R.drawable.delete_filled.getDrawable(),
                         description = R.string.delete_selected.getString()
                     ) {
                         checkedItems.toMutableList().removeIf { it == null }
@@ -239,7 +233,7 @@ fun AlternativeCommunicationScreen(
 
                     FloatingButton(
                         modifier = Modifier.padding(8.dp),
-                        icon = icons().Clear,
+                        icon = R.drawable.close.getDrawable(),
                         description = R.string.cancel.getString()
                     ) {
                         isMenuExpanded = false

@@ -1,6 +1,5 @@
 package lunacrew.luna.util.composables
 
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
@@ -15,6 +14,3 @@ fun typography(): Typography = MaterialTheme.typography
 
 @Composable
 fun shapes(): Shapes = MaterialTheme.shapes
-
-@Composable
-fun icons(): Icons.Filled = Icons.Default

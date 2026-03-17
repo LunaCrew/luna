@@ -34,7 +34,6 @@ androidx-compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4
 androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
 androidx-compose-material3-adaptive-navigation-suite = { module = "androidx.compose.material3:material3-adaptive-navigation-suite" }
 androidx-compose-google-fonts = { module = "androidx.compose.ui:ui-text-google-fonts" }
-androidx-compose-material-icons = { module = "androidx.compose.material:material-icons-core" }
 androidx-compose-constraintlayout = { module = "androidx.constraintlayout:constraintlayout-compose", version = "1.1.1" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-compose-foundation = { module = "androidx.compose.foundation:foundation" }
