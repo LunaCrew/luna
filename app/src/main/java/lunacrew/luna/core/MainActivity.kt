@@ -13,6 +13,8 @@ import androidx.compose.ui.Modifier
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.handleDeeplinks
+import lunacrew.luna.database.backup.DatabaseBackupLauncher
+import lunacrew.luna.database.backup.DatabaseBackupViewModel
 import lunacrew.luna.ui.theme.LunaTheme
 import lunacrew.luna.util.composables.colorScheme
 import javax.inject.Inject
@@ -23,6 +25,12 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var supabaseClient: Provider<SupabaseClient>
 
+    @Inject
+    lateinit var databaseBackupViewModel: Provider<DatabaseBackupViewModel>
+
+    @Inject
+    lateinit var databaseBackupLauncher: Provider<DatabaseBackupLauncher>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supabaseClient.get().handleDeeplinks(intent)
@@ -30,6 +38,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
+            databaseBackupViewModel.get().setImportDbLauncher(
+                databaseBackupLauncher.get().registerImport(applicationContext)
+            )
+            databaseBackupViewModel.get().setExportDbLauncher(
+                databaseBackupLauncher.get().registerExport(applicationContext)
+            )
+
             LunaTheme {
                 Scaffold(contentWindowInsets = WindowInsets.safeContent) { innerPadding ->
                     Surface(

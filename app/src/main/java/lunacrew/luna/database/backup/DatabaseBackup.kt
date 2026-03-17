@@ -1,4 +1,4 @@
-package lunacrew.luna.backup
+package lunacrew.luna.database.backup
 
 import android.content.Context
 import android.content.Intent
@@ -12,7 +12,7 @@ import java.nio.file.Files
 import javax.inject.Inject
 import kotlin.system.exitProcess
 
-class RoomBackup @Inject constructor(
+class DatabaseBackup @Inject constructor(
     val db: SupportSQLiteOpenHelper,
 ) {
     /**

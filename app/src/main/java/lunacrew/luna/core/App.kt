@@ -4,8 +4,8 @@ import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import lunacrew.luna.backup.RoomBackup
 import lunacrew.luna.database.AppDatabase
+import lunacrew.luna.database.backup.DatabaseBackup
 import lunacrew.luna.util.devtools.SentryConfig
 import lunacrew.luna.util.extensions.processLifecycleScope
 import javax.inject.Inject
@@ -20,7 +20,7 @@ class App : Application() {
     lateinit var sentryConfig: Provider<SentryConfig>
 
     @Inject
-    lateinit var roomBackup: Provider<RoomBackup>
+    lateinit var databaseBackup: Provider<DatabaseBackup>
 
     @Inject
     lateinit var mainViewModel: Provider<MainViewModel>
@@ -32,7 +32,7 @@ class App : Application() {
         processLifecycleScope.launch(Dispatchers.IO) {
             mainViewModel.get().init(
                 database.get(),
-                roomBackup.get(),
+                databaseBackup.get(),
                 sentryConfig.get(),
             )
         }

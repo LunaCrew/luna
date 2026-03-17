@@ -80,6 +80,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.reorderable)
     implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.compose.livedata)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.emoji)
     implementation(libs.zip4j)

@@ -38,6 +38,7 @@ androidx-compose-material-icons = { module = "androidx.compose.material:material
 androidx-compose-constraintlayout = { module = "androidx.constraintlayout:constraintlayout-compose", version = "1.1.1" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-compose-foundation = { module = "androidx.compose.foundation:foundation" }
+androidx-compose-livedata = { module = "androidx.compose.runtime:runtime-livedata" }
 androidx-emoji = { module = "androidx.emoji2:emoji2-emojipicker", version = "1.6.0"}
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltCompose" }
 supabase-bom = { module = "io.github.jan-tennert.supabase:bom", version.ref = "supabase" }
