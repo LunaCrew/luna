@@ -33,9 +33,9 @@ class AltCommsViewModel @Inject constructor(
         }
     }
 
-    fun deleteCard(entity: AltCommsEntity) {
+    fun deleteCards(cardIds: List<Int?>) {
         viewModelScope.launch {
-            db.altCommunicationDao().deleteCard(entity)
+            db.altCommunicationDao().deleteCards(cardIds)
         }
     }
 

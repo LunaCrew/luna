@@ -82,6 +82,7 @@ dependencies {
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.emoji)
+    implementation(libs.zip4j)
     ksp(libs.room.compiler)
     ksp(libs.hilt.compiler)
     testImplementation(libs.junit)

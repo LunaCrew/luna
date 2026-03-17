@@ -1,7 +1,6 @@
 package lunacrew.luna.database.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
@@ -16,8 +15,8 @@ interface AltCommsDao {
     @Update
     suspend fun updateCard(altCommunication: AltCommsEntity)
 
-    @Delete
-    suspend fun deleteCard(altCommunication: AltCommsEntity)
+    @Query("DELETE FROM alt_communication WHERE id IN (:cardIds)")
+    suspend fun deleteCards(cardIds: List<Int?>)
 
     @Query("SELECT * FROM alt_communication ORDER BY position ASC")
     fun getAllCards(): Flow<List<AltCommsEntity>>

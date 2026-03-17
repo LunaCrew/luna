@@ -9,6 +9,7 @@ import lunacrew.luna.database.dao.AltCommsDao
 import lunacrew.luna.database.dao.SettingsDao
 import lunacrew.luna.database.entities.AltCommsEntity
 import lunacrew.luna.database.entities.SettingsEntity
+import javax.inject.Inject
 
 @Database(
     entities = [
@@ -23,10 +24,10 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun settingsDao(): SettingsDao
 }
 
-object Database {
-    @Volatile private var INSTANCE: AppDatabase? = null
-    fun getInstance(context: Context): AppDatabase {
-        return INSTANCE ?: synchronized(this) {
+class Database @Inject constructor() {
+    @Volatile private var database: AppDatabase? = null
+    fun getDatabase(context: Context): AppDatabase {
+        return database ?: synchronized(this) {
             val instance = Room.databaseBuilder(
                 context.applicationContext,
                 AppDatabase::class.java,
@@ -34,7 +35,7 @@ object Database {
             ).addMigrations(*getDatabaseMigrations())
                 .fallbackToDestructiveMigration(true)
                 .build()
-            INSTANCE = instance
+            database = instance
             instance
         }
     }

@@ -4,7 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import lunacrew.luna.core.Navigator
+import lunacrew.luna.core.MainViewModel
 import javax.inject.Singleton
 
 @Module
@@ -12,5 +12,5 @@ import javax.inject.Singleton
 object CoreModule {
     @Provides
     @Singleton
-    fun provideNavigator() = Navigator()
+    fun provideMainViewModel(): MainViewModel = MainViewModel()
 }

@@ -15,4 +15,6 @@
     <string name="menu">Menu</string>
     <string name="home">Home</string>
     <string name="profile">Profile</string>
+    <string name="delete_selected">Delete selected</string>
+    <string name="delete">Delete</string>
 </resources>

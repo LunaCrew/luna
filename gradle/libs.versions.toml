@@ -53,6 +53,7 @@ room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 hilt = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
+zip4j = { module = "net.lingala.zip4j:zip4j", version = "2.11.6" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
