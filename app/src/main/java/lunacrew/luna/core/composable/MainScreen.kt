@@ -51,7 +51,6 @@ fun MainScreen(
         }
     }
 
-
     if (export) {
        databaseBackupViewModel.export(context)
     }

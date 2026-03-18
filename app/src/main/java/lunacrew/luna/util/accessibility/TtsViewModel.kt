@@ -31,10 +31,6 @@ class TtsViewModel @Inject constructor() : ViewModel() {
     private val _clickedId = MutableStateFlow<Int?>(null)
     val clickedId: StateFlow<Int?> = _clickedId.asStateFlow()
 
-    init {
-        _isSpeaking.value = _tts.value?.isSpeaking == true
-    }
-
     fun instance(context: Context): TextToSpeech {
         var instance: TextToSpeech? = null
         instance = TextToSpeech(context) { status ->
@@ -62,26 +58,31 @@ class TtsViewModel @Inject constructor() : ViewModel() {
         this._tts.value?.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
             override fun onStart(utteranceId: String?) {
                 Log.i("TTS", "onStart: $utteranceId")
+                _isSpeaking.value = false
             }
 
             override fun onStop(utteranceId: String?, interrupted: Boolean) {
                 super.onStop(utteranceId, interrupted)
                 Log.i("TTS", "onStop: $utteranceId")
+                _isSpeaking.value = false
             }
 
             override fun onDone(utteranceId: String?) {
                 Log.i("TTS", "onDone: $utteranceId")
                 _progress.value = (text.length.toFloat())
+                _isSpeaking.value = false
             }
 
 
             @Deprecated("Deprecated in Java")
             override fun onError(p0: String?) {
                 Log.e("TTS", "onError: $p0")
+                _isSpeaking.value = false
             }
 
             override fun onError(utteranceId: String?, errorCode: Int) {
                 Log.e("TTS", "onError: $errorCode :: id: $utteranceId")
+                _isSpeaking.value = false
             }
 
             override fun onRangeStart(utteranceId: String?, start: Int, end: Int, frame: Int) {
