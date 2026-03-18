@@ -6,55 +6,63 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonColors
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import lunacrew.luna.R
+import lunacrew.luna.database.entities.AltCommsEntity
 import lunacrew.luna.util.composables.EmojiPicker
 import lunacrew.luna.util.composables.colorScheme
 import lunacrew.luna.util.composables.typography
-import lunacrew.luna.util.models.AltCommCard
+import lunacrew.luna.util.composables.validate
+import lunacrew.luna.util.extensions.getString
+import lunacrew.luna.util.extensions.isValid
+import lunacrew.luna.util.extensions.next
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AltCommsDialog(
-    initialText: String? = null,
-    initialEmoji: String? = null,
     context: Context,
+    lastId: Int?,
     onDismiss: () -> Unit,
-    onConfirm: (AltCommCard) -> Unit
+    content: AltCommsEntity? = null,
+    viewModel: AltCommsViewModel = hiltViewModel()
 ) {
-    var content by remember { mutableStateOf(initialText ?: "") }
-    val isValid = content.isNotBlank()
+    val titleMaxLength = 60
+    val ttsMaxLength = 240
+    var titleLength by remember { mutableIntStateOf(content?.title?.length ?: 0) }
+    var ttsLength by remember { mutableIntStateOf(content?.tts?.length ?:0) }
+
+    var title by remember { mutableStateOf(content?.title ?: "") }
+    var tts by remember { mutableStateOf(content?.tts ?: "") }
+    var emoji by remember { mutableStateOf(content?.emoji ?: "\uD83D\uDC4B") }
+    val id = content?.id ?: lastId?.next()
+    val isValid = title.isValid(titleMaxLength) && tts.isValid(ttsMaxLength)
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-    var error by remember { mutableStateOf(false) }
-    var emoji by remember { mutableStateOf(initialEmoji ?: "\uD83D\uDC4B") }
     var showEmojiPicker by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
 
@@ -67,10 +75,9 @@ fun AltCommsDialog(
             dismissOnClickOutside = true
         )
     ) {
-        Card(
+        Surface(
             modifier = Modifier
                 .fillMaxWidth(if (isLandscape) 0.7f else 0.9f)
-                .wrapContentHeight()
                 .imePadding()
                 .padding(16.dp),
             shape = RoundedCornerShape(16.dp),
@@ -80,13 +87,13 @@ fun AltCommsDialog(
                     .fillMaxWidth()
                     .verticalScroll(rememberScrollState())
             ) {
-                val (title, emojiField, emojiLabel, textField, buttons) = createRefs()
+                val (titleLabel, emojiField, emojiLabel, titleField, ttsField, buttons) = createRefs()
 
                 Text(
-                    text = stringResource(R.string.create_message),
+                    text = R.string.create_message.getString(),
                     style = typography().titleLarge,
                     color = colorScheme().primary,
-                    modifier = Modifier.constrainAs(title) {
+                    modifier = Modifier.constrainAs(titleLabel) {
                         start.linkTo(parent.start)
                         top.linkTo(parent.top, 16.dp)
                         end.linkTo(parent.end)
@@ -103,7 +110,7 @@ fun AltCommsDialog(
                     ),
                     modifier = Modifier.constrainAs(emojiField) {
                         start.linkTo(parent.start)
-                        top.linkTo(title.bottom, 16.dp)
+                        top.linkTo(titleLabel.bottom, 16.dp)
                         end.linkTo(parent.end)
                     }
                 ) {
@@ -111,7 +118,7 @@ fun AltCommsDialog(
                 }
 
                 Text(
-                    text = stringResource(R.string.select_emoji),
+                    text = R.string.select_emoji.getString(),
                     color = colorScheme().primary,
                     modifier = Modifier.constrainAs(emojiLabel) {
                         start.linkTo(parent.start)
@@ -121,53 +128,69 @@ fun AltCommsDialog(
                 )
 
                 OutlinedTextField(
-                    value = content,
+                    value = title,
                     onValueChange = { newValue ->
-                        if (newValue.lines().size <= 6) {
-                            content = newValue
-                        } else {
-                            error = true
-                        }
+                        title = newValue
+                        titleLength = newValue.length
                     },
-                    isError = error,
                     supportingText = {
-                        if (error) {
-                            Text(
-                                modifier = Modifier.fillMaxWidth(),
-                                text = stringResource(R.string.line_limit),
-                                color = MaterialTheme.colorScheme.error
-                            )
-                        }
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = "$titleLength/$titleMaxLength",
+                            color = validate(title.isValid(titleMaxLength, true))
+                        )
                     },
-                    label = { Text(text = stringResource(id = R.string.enter_text)) },
-                    modifier = Modifier.constrainAs(textField) {
+                    label = { Text(R.string.enter_title.getString()) },
+                    modifier = Modifier.constrainAs(titleField) {
                         start.linkTo(parent.start)
                         top.linkTo(emojiLabel.bottom, 16.dp)
                         end.linkTo(parent.end)
                     },
+                    singleLine = true
+                )
+
+                OutlinedTextField(
+                    value = tts,
+                    onValueChange = { newValue ->
+                        tts = newValue
+                        ttsLength = newValue.length
+                    },
+                    supportingText = {
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = "$ttsLength/$ttsMaxLength",
+                            color = validate(tts.isValid(ttsMaxLength, true))
+                        )
+                    },
+                    label = { Text(text = stringResource(id = R.string.enter_text_to_be_said)) },
+                    modifier = Modifier.constrainAs(ttsField) {
+                        start.linkTo(parent.start)
+                        top.linkTo(titleField.bottom, 16.dp)
+                        end.linkTo(parent.end)
+                    },
                     singleLine = false,
-                    maxLines = 6,
                 )
 
                 Row(
                     modifier = Modifier.constrainAs(buttons) {
-                            top.linkTo(textField.bottom, 16.dp)
-                            end.linkTo(parent.end, 16.dp)
-                            bottom.linkTo(parent.bottom, 16.dp)
-                        }
+                        top.linkTo(ttsField.bottom, 16.dp)
+                        end.linkTo(parent.end, 16.dp)
+                        bottom.linkTo(parent.bottom, 16.dp)
+                    }
                 ) {
                     TextButton(
                         onClick = { onDismiss() },
                     ) {
-                        Text(text = stringResource(R.string.cancel))
+                        Text(R.string.cancel.getString())
                     }
                     TextButton(
                         onClick = {
-                            onConfirm(AltCommCard(emoji, content))
+                            viewModel.insertCard(AltCommsEntity(id, title, tts, emoji))
+                            onDismiss()
                         },
                         enabled = isValid,
                     ) {
-                        Text(text = stringResource(R.string.add))
+                        Text(R.string.add.getString())
                     }
                 }
             }
@@ -185,10 +208,4 @@ fun AltCommsDialog(
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun Preview() {
-    AltCommsDialog("", "", LocalContext.current, {}) { }
 }

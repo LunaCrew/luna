@@ -1,6 +1,7 @@
 package lunacrew.luna.core
 
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -21,6 +22,7 @@ import lunacrew.luna.core.composable.TopBar
 import lunacrew.luna.database.backup.DatabaseBackupLauncher
 import lunacrew.luna.database.backup.DatabaseBackupViewModel
 import lunacrew.luna.ui.theme.LunaTheme
+import lunacrew.luna.util.accessibility.TtsViewModel
 import lunacrew.luna.util.composables.colorScheme
 import javax.inject.Inject
 import javax.inject.Provider
@@ -35,6 +37,11 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var databaseBackupLauncher: Provider<DatabaseBackupLauncher>
+
+    @Inject
+    lateinit var ttsViewModel: Provider<TtsViewModel>
+
+    private lateinit var tts: TextToSpeech
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,5 +75,15 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+        tts = ttsViewModel.get().instance(this)
+    }
+
+    override fun onDestroy() {
+        if (::tts.isInitialized) {
+            tts.stop()
+            tts.shutdown()
+        }
+        super.onDestroy()
     }
 }

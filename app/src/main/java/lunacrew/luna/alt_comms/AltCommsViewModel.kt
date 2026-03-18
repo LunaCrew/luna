@@ -6,8 +6,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import lunacrew.luna.database.AppDatabase
 import lunacrew.luna.database.entities.AltCommsEntity
@@ -17,8 +17,8 @@ import javax.inject.Inject
 class AltCommsViewModel @Inject constructor(
     private val db: AppDatabase
 ) : ViewModel() {
-    private val _cardsList = MutableStateFlow(emptyList<AltCommsEntity>())
-    val cardsList: StateFlow<List<AltCommsEntity>> = _cardsList
+    private val _cardsList = MutableStateFlow<MutableList<AltCommsEntity>>(mutableListOf())
+    val cardsList: StateFlow<MutableList<AltCommsEntity>> = _cardsList.asStateFlow()
 
     init {
         getCards()
@@ -27,8 +27,8 @@ class AltCommsViewModel @Inject constructor(
     fun getCards() {
         viewModelScope.launch {
             db.altCommunicationDao().getAllCards().flowOn(Dispatchers.IO)
-                .collect { texts: List<AltCommsEntity> ->
-                    _cardsList.update { texts }
+                .collect { cards: List<AltCommsEntity> ->
+                    _cardsList.value = cards.toMutableList()
                 }
         }
     }
@@ -39,9 +39,9 @@ class AltCommsViewModel @Inject constructor(
         }
     }
 
-    fun updateCard(entity: AltCommsEntity) {
+    fun deleteCards(cardId: Int?) {
         viewModelScope.launch {
-            db.altCommunicationDao().updateCard(entity)
+            db.altCommunicationDao().deleteCards(listOf(cardId))
         }
     }
 
@@ -53,8 +53,8 @@ class AltCommsViewModel @Inject constructor(
 
     fun reorderCards(entities: List<AltCommsEntity>) {
         viewModelScope.launch(Dispatchers.IO) {
-            entities.forEachIndexed { position, entity ->
-                db.altCommunicationDao().updateCard(entity.copy(position = position))
+            entities.forEachIndexed { id, entity ->
+                db.altCommunicationDao().updateCard(entity.copy(id = id))
             }
         }
     }

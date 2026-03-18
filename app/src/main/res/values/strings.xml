@@ -23,4 +23,7 @@
     <string name="medical_info">Medical info</string>
     <string name="notes">Notes</string>
     <string name="pomodoro">Pomodoro</string>
+    <string name="enter_title">Create a title for the card</string>
+    <string name="enter_text_to_be_said">Enter the text to be spoken</string>
+    <string name="stop_tts">Stop text to speech</string>
 </resources>
