@@ -1,43 +1,46 @@
 package lunacrew.luna.util.composables
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.view.LayoutInflater
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
+import android.view.MotionEvent
+import android.widget.FrameLayout
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.view.ViewCompat
 import androidx.emoji2.emojipicker.EmojiPickerView
 
 @SuppressLint("InflateParams")
 @Composable
-fun EmojiPicker(context: Context, onSelected: (String) -> Unit) {
-    val scrollState = rememberScrollState()
+fun EmojiPicker(onSelected: (String) -> Unit) {
     AndroidView(
         factory = { context ->
-            EmojiPickerView(context).apply {
+            val container = object : FrameLayout(context) {
+                override fun onInterceptTouchEvent(ev: MotionEvent?) = false
+                override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+                    ev?.let { parent?.requestDisallowInterceptTouchEvent(true) }
+                    return super.dispatchTouchEvent(ev)
+                }
+            }
+
+            val emojiPicker = EmojiPickerView(context).apply {
                 setOnEmojiPickedListener { item ->
                     onSelected(item.emoji)
                 }
             }
+
+            container.addView(
+                emojiPicker,
+                FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT
+                )
+            )
+            container
         },
         modifier = Modifier
             .fillMaxWidth()
             .height(300.dp)
-            .scrollable(
-                state = scrollState,
-                orientation = Orientation.Vertical
-            ),
-    ) {
-        LayoutInflater.from(context).inflate(android.R.layout.activity_list_item, null).apply {
-            ViewCompat.setNestedScrollingEnabled(this, true)
-        }
-
-    }
+    )
 }
