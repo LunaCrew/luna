@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="Intent.FLAG_GRANT_READ_URI_PERMISSION"/>
+    <uses-permission android:name="android.permission.FLAG_GRANT_WRITE_URI_PERMISSION"/>
+
     <application
         android:name=".core.App"
         android:allowBackup="true"

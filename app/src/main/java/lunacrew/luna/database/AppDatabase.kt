@@ -5,36 +5,37 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
-import lunacrew.luna.database.dao.AltCommunicationDao
+import lunacrew.luna.database.dao.AltCommsDao
 import lunacrew.luna.database.dao.SettingsDao
-import lunacrew.luna.database.entities.AltCommunicationEntity
+import lunacrew.luna.database.entities.AltCommsEntity
 import lunacrew.luna.database.entities.SettingsEntity
+import javax.inject.Inject
 
 @Database(
     entities = [
-        AltCommunicationEntity::class,
+        AltCommsEntity::class,
         SettingsEntity::class
     ],
-    version = 2,
+    version = 1,
     exportSchema = false,
 )
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun altCommunicationDao(): AltCommunicationDao
+    abstract fun altCommunicationDao(): AltCommsDao
     abstract fun settingsDao(): SettingsDao
 }
 
-object Database {
-    @Volatile private var INSTANCE: AppDatabase? = null
-    fun getInstance(context: Context): AppDatabase {
-        return INSTANCE ?: synchronized(this) {
+class Database @Inject constructor() {
+    @Volatile private var database: AppDatabase? = null
+    fun getDatabase(context: Context): AppDatabase {
+        return database ?: synchronized(this) {
             val instance = Room.databaseBuilder(
                 context.applicationContext,
                 AppDatabase::class.java,
-                "luna-app-database"
+                "luna-database"
             ).addMigrations(*getDatabaseMigrations())
                 .fallbackToDestructiveMigration(true)
                 .build()
-            INSTANCE = instance
+            database = instance
             instance
         }
     }

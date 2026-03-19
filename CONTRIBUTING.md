@@ -36,56 +36,6 @@
 + **Architecture:** Single Activity & MVVM
 + **UI:** Jetpack Compose
 
-## Generating `google-services.json` file.
-
-### Step 1: Create a Firebase Project and setup
-
-1. Go to the [Firebase Console](https://console.firebase.google.com/).
-2. Click Add project.
-3. Follow the prompts to name your project and choose your Google Analytics preferences.
-
-### Step 2: Register a new Android app
-
-Once you are inside your project dashboard:
-
-1. Click the Android icon (the little green robot) in the center of the page to add a new app.
-
-2. Register App: Under Android package name, enter exactly:
-    ```md
-    lunacrew.luna
-    ```
-3. (Optional) App nickname: You can call it "Luna Android."
-4. (Optional) Debug signing certificate SHA-1: Leave this blank for now unless you are setting up
-   Google Sign-In or Dynamic Links immediately.
-5. Click Register app.
-6. After clicking Register, the console will present a Download `google-services.json` button, but
-   don't download it yet.
-
-### Step 3: Setup authentication providers
-
-1. On the left sidebar, click Authentication or access
-   `https://console.firebase.google.com/project/YOUR_APP_ID/authentication`.
-2. Go to the Sign-in method tab.
-3. Click Add new provider and enable the following:
-    + Email/Password: Toggle "Enabled" and click Save.
-    + Google: Toggle "Enabled." You will be asked to select a Project support email. Click Save.
-    + Anonymous: Toggle "Enabled" and click Save.
-4. If it doesn't prompt you to download the `google-services.json` file, go back to apps list and
-   download it.
-
-### Step 4: Place the File in Your Project
-
-1. Open your project in Android Studio.
-2. Switch the project view from "Android" to "Project" using the dropdown in the top-left corner.
-3. Navigate to your app module directory: `./app/`
-4. Drag and drop the `google-services.json` file into that app folder.
-
-> [!CAUTION]
-> Do not rename this file (e.g., `google-services(1).json`). It must be exactly
-`google-services.json`.
-> 
-> Do not edit the file as well.
-
 ## Gradle Commands
 
 ```bash
