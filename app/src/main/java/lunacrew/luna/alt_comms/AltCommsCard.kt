@@ -46,7 +46,7 @@ fun AltCommsCard(
             )
 
             Text(
-                text = card.title,
+                text = card.tts,
                 modifier = Modifier.constrainAs(text) {
                     start.linkTo(parent.start)
                     top.linkTo(emoji.bottom, 16.dp)

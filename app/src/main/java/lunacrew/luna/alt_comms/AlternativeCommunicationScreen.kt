@@ -180,11 +180,11 @@ fun AlternativeCommunicationScreen(
     if (isAltCommDialogVisible) {
         AltCommsDialog(
             content = content,
-            context = context,
             lastId = lastId,
             onDismiss = {
                 isAltCommDialogVisible = false
                 selectedCardId = null
+                content = null
             },
         )
     }

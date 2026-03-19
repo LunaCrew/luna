@@ -1,6 +1,5 @@
 package lunacrew.luna.alt_comms
 
-import android.content.Context
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -45,22 +44,18 @@ import lunacrew.luna.util.extensions.next
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AltCommsDialog(
-    context: Context,
     lastId: Int?,
     onDismiss: () -> Unit,
     content: AltCommsEntity? = null,
     viewModel: AltCommsViewModel = hiltViewModel()
 ) {
-    val titleMaxLength = 60
     val ttsMaxLength = 240
-    var titleLength by remember { mutableIntStateOf(content?.title?.length ?: 0) }
-    var ttsLength by remember { mutableIntStateOf(content?.tts?.length ?:0) }
+    var ttsLength by remember { mutableIntStateOf(content?.tts?.length ?: 0) }
 
-    var title by remember { mutableStateOf(content?.title ?: "") }
     var tts by remember { mutableStateOf(content?.tts ?: "") }
     var emoji by remember { mutableStateOf(content?.emoji ?: "\uD83D\uDC4B") }
     val id = content?.id ?: lastId?.next()
-    val isValid = title.isValid(titleMaxLength) && tts.isValid(ttsMaxLength)
+    val isValid = tts.isValid(ttsMaxLength)
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
     var showEmojiPicker by remember { mutableStateOf(false) }
@@ -87,7 +82,7 @@ fun AltCommsDialog(
                     .fillMaxWidth()
                     .verticalScroll(rememberScrollState())
             ) {
-                val (titleLabel, emojiField, emojiLabel, titleField, ttsField, buttons) = createRefs()
+                val (titleLabel, emojiField, emojiLabel, ttsField, buttons) = createRefs()
 
                 Text(
                     text = R.string.create_message.getString(),
@@ -128,28 +123,6 @@ fun AltCommsDialog(
                 )
 
                 OutlinedTextField(
-                    value = title,
-                    onValueChange = { newValue ->
-                        title = newValue
-                        titleLength = newValue.length
-                    },
-                    supportingText = {
-                        Text(
-                            modifier = Modifier.fillMaxWidth(),
-                            text = "$titleLength/$titleMaxLength",
-                            color = validate(title.isValid(titleMaxLength, true))
-                        )
-                    },
-                    label = { Text(R.string.enter_title.getString()) },
-                    modifier = Modifier.constrainAs(titleField) {
-                        start.linkTo(parent.start)
-                        top.linkTo(emojiLabel.bottom, 16.dp)
-                        end.linkTo(parent.end)
-                    },
-                    singleLine = true
-                )
-
-                OutlinedTextField(
                     value = tts,
                     onValueChange = { newValue ->
                         tts = newValue
@@ -165,7 +138,7 @@ fun AltCommsDialog(
                     label = { Text(text = stringResource(id = R.string.enter_text_to_be_said)) },
                     modifier = Modifier.constrainAs(ttsField) {
                         start.linkTo(parent.start)
-                        top.linkTo(titleField.bottom, 16.dp)
+                        top.linkTo(emojiLabel.bottom, 16.dp)
                         end.linkTo(parent.end)
                     },
                     singleLine = false,
@@ -185,7 +158,7 @@ fun AltCommsDialog(
                     }
                     TextButton(
                         onClick = {
-                            viewModel.insertCard(AltCommsEntity(id, title, tts, emoji))
+                            viewModel.insertCard(AltCommsEntity(id, tts, emoji))
                             onDismiss()
                         },
                         enabled = isValid,
@@ -200,7 +173,7 @@ fun AltCommsDialog(
                     onDismissRequest = { showEmojiPicker = false },
                     sheetState = sheetState
                 ) {
-                    EmojiPicker(context) {
+                    EmojiPicker {
                         emoji = it
                         showEmojiPicker = false
                     }
